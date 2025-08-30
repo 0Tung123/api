@@ -80,6 +80,10 @@ docker-compose exec redis redis-cli ping
 
 ## Troubleshooting
 
+**Build fails (`nest: not found`)**: Fixed in current Dockerfile
+- Build stage installs all dependencies (including devDependencies)
+- Production stage only includes production dependencies
+
 **Build fails**: Clear Docker cache
 ```bash
 docker system prune -f
@@ -90,4 +94,9 @@ docker-compose build --no-cache
 ```bash
 docker-compose ps
 docker-compose logs postgres
+```
+
+**Environment variables**: Ensure all required vars in `.env`
+```bash
+docker-compose config  # Validate docker-compose.yml
 ```
