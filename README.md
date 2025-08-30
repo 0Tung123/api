@@ -21,7 +21,8 @@ npm run docker:dev
 
 4. Start development server:
 ```bash
-npm run start:dev
+npm run start:dev                    # Start without SQL queries
+npm run start:dev:verbose            # Start with SQL queries shown
 ```
 
 ## Docker Commands
@@ -30,6 +31,9 @@ npm run start:dev
 ```bash
 # Start only databases (for local development)
 npm run docker:dev
+
+# Start databases + pgAdmin web interface
+npm run docker:dev:pgadmin
 
 # Start all services with hot reload
 npm run docker:up
@@ -78,6 +82,7 @@ docker run -p 3002:3002 \
 - **API**: http://localhost:3002
 - **PostgreSQL**: localhost:5432  
 - **Redis**: localhost:6379
+- **pgAdmin**: http://localhost:5050 (admin@example.com / admin123)
 - **Swagger**: http://localhost:3002/api
 
 ## Environment Variables
@@ -88,4 +93,31 @@ See `.env` file for current configuration. Key variables:
 - `NODE_ENV`: Environment (development/production)
 - `JWT_SECRET`: Change this in production
 - `DB_*`: Database connection settings
+- `DB_LOGGING`: Set to `true` to see SQL queries (disabled by default)
 - `REDIS_*`: Redis connection settings
+
+## Database Management
+
+### pgAdmin Web Interface
+
+Access PostgreSQL database via web interface:
+
+**URL**: http://localhost:5050  
+**Login**: admin@example.com / admin123
+
+**Add Server Connection:**
+1. Right-click "Servers" → "Register" → "Server"
+2. **General tab**: Name = "Local API DB"
+3. **Connection tab**:
+   - Host: `postgres` (container name)
+   - Port: `5432`
+   - Database: `api_db`
+   - Username: `postgres`
+   - Password: `postgres123`
+
+### Direct PostgreSQL Connection
+
+```bash
+# Connect via psql (requires PostgreSQL client)
+psql -h localhost -p 5432 -U postgres -d api_db
+```

@@ -18,6 +18,7 @@ npm run docker:prod
 | Command | Description |
 |---------|-------------|
 | `npm run docker:dev` | Start only PostgreSQL + Redis |
+| `npm run docker:dev:pgadmin` | Start databases + pgAdmin web interface |
 | `npm run docker:prod` | Build and start all services |
 | `npm run docker:build` | Build API Docker image |
 | `npm run docker:rebuild` | Force rebuild and restart |
@@ -28,6 +29,7 @@ npm run docker:prod
 
 - **API**: http://localhost:3002
 - **Swagger**: http://localhost:3002/api
+- **pgAdmin**: http://localhost:5050 (admin@example.com / admin123)
 - **PostgreSQL**: localhost:5432
 - **Redis**: localhost:6379
 
