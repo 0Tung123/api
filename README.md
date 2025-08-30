@@ -1,87 +1,91 @@
-# API Documentation
+# API Backend
 
-## Cấu trúc dự án
+NestJS API backend with PostgreSQL and Redis.
 
-```
-src/
-├── common/                 # Các utilities, decorators, pipes chung
-│   ├── decorators/        # Custom decorators
-│   ├── guards/           # Authentication/Authorization guards
-│   └── pipes/            # Validation pipes
-├── config/               # Cấu hình ứng dụng
-│   ├── app.config.ts     # Cấu hình app
-│   ├── database.config.ts # Cấu hình database
-│   └── swagger.config.ts # Cấu hình Swagger
-├── modules/              # Các feature modules
-│   └── app/             # App module chính
-│       ├── dto/         # Data Transfer Objects
-│       ├── app.controller.ts
-│       ├── app.service.ts
-│       └── app.module.ts
-├── app.module.ts        # Root module
-└── main.ts             # Entry point
-```
+## Development Setup
 
-## Cài đặt
-
+1. Install dependencies:
 ```bash
-# Cài đặt dependencies
 npm install
-
-# Copy file môi trường
-cp .env.example .env
-
-# Chỉnh sửa file .env theo cấu hình của bạn
 ```
 
-## Chạy ứng dụng
+2. Configure environment:
+```bash
+# Edit .env file if needed (JWT_SECRET, database credentials, etc.)
+```
+
+3. Start database services only:
+```bash
+npm run docker:dev
+```
+
+4. Start development server:
+```bash
+npm run start:dev
+```
+
+## Docker Commands
+
+### Development Mode
+```bash
+# Start only databases (for local development)
+npm run docker:dev
+
+# Start all services with hot reload
+npm run docker:up
+```
+
+### Production Mode
+```bash
+# Build and start all services  
+npm run docker:prod
+
+# Build API image only
+npm run docker:build
+
+# Rebuild and restart all services
+npm run docker:rebuild
+```
+
+### Utility Commands
+```bash
+# View logs
+npm run docker:logs
+
+# Stop all services
+npm run docker:down
+
+# View specific service logs
+docker-compose logs -f api
+docker-compose logs -f postgres
+```
+
+## Manual Docker Build
 
 ```bash
-# Development
-npm run start:dev
+# Build API image
+docker build -t api-backend .
 
-# Production
-npm run build
-npm run start:prod
+# Run with external databases
+docker run -p 3002:3002 \
+  -e DB_HOST=localhost \
+  -e REDIS_HOST=localhost \
+  api-backend
 ```
 
-## API Documentation
+## Services
 
-Sau khi chạy ứng dụng, truy cập:
-- API: http://localhost:3002/api
-- Swagger Documentation: http://localhost:3002/api/docs
+- **API**: http://localhost:3002
+- **PostgreSQL**: localhost:5432  
+- **Redis**: localhost:6379
+- **Swagger**: http://localhost:3002/api
 
-## Endpoints
+## Environment Variables
 
-### GET /api
-Thông tin ứng dụng
+All configuration is done via environment variables from `.env` file. No default values in code.
 
-### GET /api/health  
-Kiểm tra trạng thái ứng dụng
-
-## Cấu hình môi trường
-
-Tất cả cấu hình nhạy cảm được lưu trong file `.env`:
-- Không commit file `.env` lên git
-- Sử dụng `.env.example` làm template
-- Cấu hình production qua environment variables
-
-## Thêm module mới
-
-1. Tạo thư mục trong `src/modules/`
-2. Tạo controller, service, module files
-3. Thêm DTOs trong thư mục `dto/`
-4. Import module vào `app.module.ts`
-
-## Validation
-
-Sử dụng `class-validator` và `class-transformer`:
-- Tạo DTOs với decorators validation
-- Global validation pipe đã được cấu hình
-
-## Swagger
-
-- Sử dụng `@ApiTags()` cho controller
-- Sử dụng `@ApiOperation()` cho endpoints  
-- Sử dụng `@ApiResponse()` để define response
-- DTOs tự động generate schema
+See `.env` file for current configuration. Key variables:
+- `NODE_ENV`: Environment (development/production)
+- `JWT_SECRET`: Change this in production
+- `DB_*`: Database connection settings
+- `REDIS_*`: Redis connection settings
